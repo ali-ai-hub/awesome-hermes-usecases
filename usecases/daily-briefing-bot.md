@@ -63,3 +63,4 @@ Weekdays-only: swap `0 8 * * *` for `0 8 * * 1-5`.
 
 - Official tutorial: <https://hermes-agent.nousresearch.com/docs/guides/daily-briefing-bot/>
 - Cron reference: <https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron>
+- Automation templates catalog (weekly digests, backlog triage, docs drift, security audits, and more): <https://hermes-agent.nousresearch.com/docs/guides/automation-templates>

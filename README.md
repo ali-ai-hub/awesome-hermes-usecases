@@ -1,7 +1,11 @@
+<p align="center">
+  <img src="assets/hermes-agent-usecases.png" alt="Hermes Agent — Real-World Use Cases" width="800">
+</p>
+
 # Awesome Hermes Agent Use Cases
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-![Use Cases](https://img.shields.io/badge/usecases-16-blue?style=flat-square)
+![Use Cases](https://img.shields.io/badge/usecases-22-blue?style=flat-square)
 ![Last Update](https://img.shields.io/github/last-commit/YOUR_USERNAME/hermes-agent-usecases?label=Last%20Update&style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 
@@ -32,6 +36,8 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 - [Home & Device Control](#home--device-control)
 - [Content & Creative Pipelines](#content--creative-pipelines)
 - [Orchestration & Multi-Agent](#orchestration--multi-agent)
+- [Memory & Context](#memory--context)
+- [Deployment Patterns](#deployment-patterns)
 - [Research & Training](#research--training)
 
 ## Automation & Scheduling
@@ -46,7 +52,9 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 
 | Name | Description |
 | --- | --- |
-| [Team Telegram Assistant](usecases/team-telegram-assistant.md) | Always-on shared bot for a small team — coding, research, ops — with per-user sessions, Docker-isolated terminal, and an allowlist. |
+| [Team Telegram Assistant](usecases/team-telegram-assistant.md) | Always-on shared bot for a small team — coding, research, ops — with per-user sessions, Docker-isolated terminal, and an allowlist. The gateway also supports Discord, Slack, WhatsApp, Signal, Matrix, Email, SMS, and more; the Telegram flow is the cleanest starting point for any of them. |
+| [Enterprise Messaging (Feishu / WeCom)](usecases/enterprise-messaging-feishu-wecom.md) | Production-style Hermes deployments on Chinese enterprise chat platforms — Feishu managed under `launchd`, WeCom with native media-and-vision analysis. |
+| [Voice Assistant Workflows](usecases/voice-assistant.md) | Three modes: CLI mic loop, voice notes in Telegram/Discord, and a Discord voice-channel bot. Same agent, same memory, voice-only I/O. |
 
 ## Coding & Developer Workflows
 
@@ -82,6 +90,20 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | --- | --- |
 | [Paperclip Managed Employee](usecases/paperclip-managed-employee.md) | Hermes running as a worker inside Nous Research's Paperclip task-orchestration system, with persistent sessions and checkpoints. |
 | [Self-Evolution](usecases/self-evolution.md) | A GEPA + DSPy loop that optimizes your Hermes skills, prompts, and tool text, producing PR-ready improvements for a few dollars per run. |
+| [Zouroboros Swarm Bridge](usecases/zouroboros-swarm-bridge.md) | Hermes as one of four interchangeable executors (Claude Code, Codex, Gemini, Hermes) inside a third-party multi-agent orchestrator. Bash-bridge adapter pattern with shared identity. |
+
+## Memory & Context
+
+| Name | Description |
+| --- | --- |
+| [YantrikDB Cognitive Memory (via MCP)](usecases/yantrikdb-memory-mcp.md) | Replace or augment native memory with a dedicated cognitive DB — vector + knowledge graph + temporal decay + contradiction detection. Integrates over MCP, so no Hermes plugin needed. |
+
+## Deployment Patterns
+
+| Name | Description |
+| --- | --- |
+| [Hermes on Fly.io](usecases/hermes-on-flyio.md) | Official Fly-apps deployment guide — run Hermes as a Fly Machine with a volume-backed `/opt/data`, daily snapshots, and ~$15/month baseline. |
+| [Local & Proxy Model Backends](usecases/local-and-proxy-models.md) | Run Hermes against Ollama, vLLM, oMLX, or a custom OpenAI-compatible proxy — for cost control, data locality, or model choice beyond the defaults. |
 
 ## Research & Training
 

@@ -16,7 +16,7 @@ The entries below are derived from the initial fact-check of candidate sources. 
 | Candidate | Why it's here | What would promote it |
 | --- | --- | --- |
 | **Telegram universal interface** | Pattern is real, but early sourcing was mostly social posts rather than docs. | Re-source to the official Telegram gateway docs and the team-telegram tutorial. Likely promotable today — see the existing [Team Telegram Assistant](../usecases/team-telegram-assistant.md) entry. |
-| **Hermes as MCP server** | Feature exists, but needs to be grounded in a specific docs page or release note, not a third-party summary. | A link to Hermes release notes or docs describing MCP server mode end-to-end. |
+| **Hermes as MCP server** | Feature exists, but needs to be grounded in a specific docs page or release note, not a third-party summary. Note: Hermes *consuming* MCP is real and well-documented (see [YantrikDB](../usecases/yantrikdb-memory-mcp.md) for an example). The open question is Hermes *exposing* itself as an MCP server to external clients. | A link to Hermes release notes or docs describing MCP server mode end-to-end. |
 | **Zouroboros swarm bridge** | Third-party integration, early sourcing was light. | A repo that explicitly shows Hermes bridging, plus a README describing the architecture. Would come in as ecosystem integration, medium confidence. |
 | **YantrikDB memory engine plugin** | Possible ecosystem plugin, but the original reference didn't clearly target Hermes. | A plugin repo that names Hermes as the integration target, with install steps that drop into `~/.hermes/plugins/`. |
 | **Obsidian LLM wiki** | Interesting pattern, but was sourced from X only in the initial bundle. | Replace with the eBourgess "intent-to-artifacts" blog and official sessions/memory docs. Partially covered already by [Intent-to-Artifacts Workflow](../usecases/intent-to-artifacts.md); a dedicated Obsidian variant needs its own first-person source. |
@@ -25,6 +25,16 @@ The entries below are derived from the initial fact-check of candidate sources. 
 | **Daily business intelligence** | Same as above — a prompt variation on the briefing pattern, not a standalone verified deployment. | Primary evidence of a team using it. |
 | **Competitor price monitoring** | Works as a prompt pattern for [Zero-Token Notifications](../usecases/zero-token-notifications.md), but no one has publicly documented running it long-term. | A write-up (blog, issue, repo) showing it deployed. |
 | **Other "Community Build" / X-only entries** | Couldn't be cross-checked against docs, companion repos, or first-person write-ups. | Any primary source pointing to the pattern. |
+| **Auto-update docs on refactor** | Pattern is reasonable but submission cited a fabricated URL. | Write-up grounded in the official [PR review cron](../usecases/github-pr-review-cron.md) or [webhook](../usecases/github-pr-review-webhook.md) tutorials with a real blog or repo link. |
+| **Competitor price monitoring** | Submission cited a fabricated URL; pattern already covered by [Zero-Token Notifications](../usecases/zero-token-notifications.md). | A first-person write-up that extends the zero-token pattern with browser automation, posted publicly. |
+| **Daily business intelligence** | Submission cited a fabricated URL; pattern is a Daily Briefing variant. | A first-person write-up of someone running this against Stripe/GA for real, not a re-skinned tutorial. |
+| **AI executive team on Discord** | Submission used OpenClaw-style profile vocabulary; `wanikua/become-ceo` reference needs to be verified as a real Hermes deployment. | A README in the referenced repo that names Hermes and shows Hermes-specific primitives (gateway, skills, delegation). |
+| **Raspberry Pi / edge deployment** | Pattern is reasonable but submission was framework-agnostic. Hermes officially supports Android/Termux on ARM. | A first-person write-up of Hermes on a Pi (or Termux) with specific model, config, and operational notes. |
+| **Sim (visual workflow engine) × Hermes** | Sim is a real project but the submission didn't document the Hermes integration path. | A write-up showing Sim's MCP export consumed by Hermes as an MCP server, with config and a concrete use case. |
+
+See the triage files for full rationale:
+- [`submissions-triage-2026-04.md`](./submissions-triage-2026-04.md) — first batch (20 candidates)
+- [`submissions-triage-2026-04-batch2.md`](./submissions-triage-2026-04-batch2.md) — second batch (6 candidates)
 
 ## How to promote an entry
 

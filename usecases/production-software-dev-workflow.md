@@ -50,6 +50,8 @@ You can't replicate the author's private pipeline, but you can build a sibling s
 
 This is first-person evidence, not a runnable demo. Treat it as a pattern guide, not a template.
 
+A complementary field report comes from **Mark Watson**, who documents daily Hermes use across dev, research, writing, and business analysis, paired with VM/sandbox patterns for containing security risk. Different in emphasis — security posture rather than a specific architecture — but useful as a second data point that serious daily use is happening. Watson publishes on his personal site and in self-published books; the specific Hermes writeup was referenced in research notes but is not yet pinned to a canonical URL in this catalog.
+
 ## Sources
 
-- GitHub issue: <https://github.com/NousResearch/hermes-agent/issues/5563>
+- GitHub issue (JuanDragin): <https://github.com/NousResearch/hermes-agent/issues/5563>
