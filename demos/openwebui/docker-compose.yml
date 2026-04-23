@@ -1,0 +1,23 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: hermes-openwebui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"
+    environment:
+      # Points Open WebUI at the Hermes API server running on the host.
+      OPENAI_API_BASE_URL: http://host.docker.internal:8642/v1
+      OPENAI_API_KEY: ${HERMES_API_KEY}
+      # Disable the default OpenAI connection so only Hermes is used.
+      ENABLE_OPENAI_API: "true"
+      # Keep data in a named volume so conversations survive restarts.
+      WEBUI_NAME: "Hermes"
+    volumes:
+      - openwebui-data:/app/backend/data
+    extra_hosts:
+      # Required on Linux so `host.docker.internal` resolves to the host.
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  openwebui-data:

@@ -1,0 +1,28 @@
+name: link-check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+  pull_request:
+    paths:
+      - '**.md'
+  schedule:
+    # Weekly on Sunday 03:00 UTC — catches sources that rot over time.
+    - cron: '0 3 * * 0'
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          config-file: '.github/workflows/link-check-config.json'
+          # Don't fail on the first broken link — report them all.
+          check-modified-files-only: 'no'

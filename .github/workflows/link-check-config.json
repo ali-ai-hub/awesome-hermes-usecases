@@ -1,0 +1,17 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://t\\.me/"
+    },
+    {
+      "pattern": "^https://x\\.com/"
+    },
+    {
+      "pattern": "^https://twitter\\.com/"
+    }
+  ],
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 301, 302, 403, 429]
+}
