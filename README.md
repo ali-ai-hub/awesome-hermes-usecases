@@ -6,12 +6,18 @@
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 ![Use Cases](https://img.shields.io/badge/usecases-22-blue?style=flat-square)
-![Last Update](https://img.shields.io/github/last-commit/YOUR_USERNAME/hermes-agent-usecases?label=Last%20Update&style=flat-square)
+![Last Update](https://img.shields.io/github/last-commit/ali-erfan-dev/awesome-hermes-usecases?label=Last%20Update&style=flat-square)
+![Stars](https://img.shields.io/github/stars/ali-erfan-dev/awesome-hermes-usecases?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 
 **A community collection of real-world [Hermes Agent](https://github.com/NousResearch/hermes-agent) use cases — each one backed by public evidence.**
 
-Hermes Agent is the self-improving open-source AI agent from [Nous Research](https://nousresearch.com). It lives on your server, remembers what it learns, and talks to you from Telegram, Discord, Slack, the browser, or the CLI. This repo catalogs the ways people are actually using it — not blue-sky ideas.
+| | This Catalog | Official Docs | X Threads | Reddit |
+|---|---|---|---|---|
+| Organized by category | ✅ | Partial | ❌ | ❌ |
+| Runnable demos included | ✅ | ❌ | ❌ | ❌ |
+| Primary source required | ✅ | ✅ | ❌ | ❌ |
+| Community-maintained | ✅ | ❌ | ❌ | ❌ |
 
 > [!NOTE]
 > **Evidence rule.** Every use case here links to a primary source: an official Hermes doc, a Nous Research companion repo, a GitHub issue with deployment details, or a first-person blog post. If the only evidence is a tweet or "community build" marketing page, it lives in [`research/unverified.md`](research/unverified.md) instead — not in the catalog below.
