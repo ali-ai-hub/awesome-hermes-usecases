@@ -5,7 +5,7 @@
 # Awesome Hermes Agent Use Cases
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-![Use Cases](https://img.shields.io/badge/usecases-22-blue?style=flat-square)
+![Use Cases](https://img.shields.io/badge/usecases-23-blue?style=flat-square)
 ![Last Update](https://img.shields.io/github/last-commit/ali-erfan-dev/awesome-hermes-usecases?label=Last%20Update&style=flat-square)
 ![Stars](https://img.shields.io/github/stars/ali-erfan-dev/awesome-hermes-usecases?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
@@ -115,6 +115,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 
 | Name | Description |
 | --- | --- |
+| [Multi-Platform Social Media Research](usecases/multi-platform-research.md) | Run a single query across Reddit, X/Twitter, YouTube, Hacker News, and Polymarket via a single Python engine. Firefox-cookie auth for X, no API key needed on WSL. Delivered as a unified markdown brief to Telegram or local storage. |
 | [RL Training & Benchmarks](usecases/rl-training-benchmarks.md) | Use Hermes environments to train and evaluate tool-calling models. The TBLite benchmark covers 100 tasks with strong correlation to TB2. |
 | [Browser & Admin UIs](usecases/browser-admin-uis.md) | The official web dashboard plus community UIs — browser access to sessions, files, cron, and control plane. |
 
