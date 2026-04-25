@@ -98,5 +98,5 @@ brief with top 5 sources and sentiment to telegram."
 ## Sources
 
 - last30days skill repository (runbook + Python engine): <https://github.com/mvanhorn/last30days-skill>
-- Bird browser-cookie Twitter/X search library (vendored): <https://github.com/...bird-search...> (bundled in skill at `scripts/lib/vendor/bird-search/`)
+- Bird browser-cookie Twitter/X search library: vendored in the skill at `scripts/lib/vendor/bird-search/` — reads Firefox cookies directly without a separate X API
 - YouTube transcript extraction (`yt-dlp`): <https://github.com/yt-dlp/yt-dlp>
