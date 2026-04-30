@@ -131,12 +131,20 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 Three starter demos live in [`/demos`](demos/). Each has a `README.md`, a `.env.example`, and a one-command setup:
 
 - [**daily-briefing**](demos/daily-briefing/) — cron + web search + Telegram delivery
+- [**matt-pocock-skills**](demos/matt-pocock-skills/) — planning pipeline (`/grill-with-docs` → `/to-issues`) + verification script demo
 - [**openwebui**](demos/openwebui/) — Hermes API server + Open WebUI via Docker Compose
 - [**team-telegram**](demos/team-telegram/) — gateway + Telegram + Docker terminal backend
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). The short version: **one primary source minimum** — official docs, a Nous companion repo, a GitHub issue with real deployment detail, or a first-person blog post. X posts and "community build" marketing pages don't count as primary evidence.
+
+### For Contributors
+
+Every PR that touches `usecases/*.md` triggers automated verification. Learn how it works and how to pass it:
+
+- [docs/verification-criteria.md](docs/verification-criteria.md) — how scoring works, what's green vs yellow vs red, and how to run the script locally before submitting
+- `python scripts/verify-usecase.py --usecase usecases/my-topic.md --check all` — generate your own verification report
 
 > Please only submit use cases you have personally run (at least once) or that you can trace to a primary public source. No crypto use cases.
 
