@@ -5,7 +5,7 @@
 # Awesome Hermes Agent Use Cases
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-![Use Cases](https://img.shields.io/badge/usecases-28-blue?style=flat-square)
+![Use Cases](https://img.shields.io/badge/usecases-29-blue?style=flat-square)
 ![Last Update](https://img.shields.io/github/last-commit/ali-erfan-dev/awesome-hermes-usecases?label=Last%20Update&style=flat-square)
 ![Stars](https://img.shields.io/github/stars/ali-erfan-dev/awesome-hermes-usecases?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
@@ -92,6 +92,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | [Autonovel — House of Bells](usecases/autonovel-house-of-bells.md) | End-to-end autonomous novel, art, and audiobook production. Nous Research's own pipeline shipped a 19-chapter, 79,456-word book with an audiobook and a website. |
 | [Printing-Factory Task Memory](usecases/printing-factory-task-memory.md) | A custom skill that fixes long-context slowness and forgetting during daily factory operations. Local JSON index with sub-second retrieval. |
 | [Screen Recording → Tutorial Video](usecases/creative-screen-recording-video.md) | Feed Hermes a raw screen recording and get a finished tutorial video on HeyGen with your AI avatar — script generation, video production, and memory of preferences for repeat work. |
+|[ComfyUI Workflow Orchestration](usecases/comfyui-workflow-orchestration.md) | Install, launch, and run ComfyUI node-based media generation workflows on demand — from Stable Diffusion to video pipelines, with automatic custom-node installation and deterministic output management. |
 
 ## Orchestration & Multi-Agent
 
