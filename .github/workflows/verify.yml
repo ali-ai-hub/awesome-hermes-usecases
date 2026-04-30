@@ -1,0 +1,62 @@
+name: Usecase Verification
+
+on:
+  pull_request:
+    paths:
+      - 'usecases/*.md'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify each changed usecase
+        id: verify
+        run: |
+          exit_ok=true
+          report=""
+          for f in $(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^usecases/.*\.md$'); do
+            echo "::group::Verifying $f"
+            result=$(python scripts/verify-usecase.py --usecase "$f" --ci 2>&1) || ec=$?
+            if [ "${ec:-0}" -ne 0 ]; then
+              exit_ok=false
+              report+="❌ **$f** — red flag detected\n"
+            else
+              report+="✅ **$f** — passed\n"
+            fi
+            echo "$result"
+            echo "::endgroup::"
+          done
+          echo "EXIT_OK=$exit_ok" >> "$GITHUB_ENV"
+          echo "REPORT<<EOF" >> "$GITHUB_ENV"
+          echo "$report" >> "$GITHUB_ENV"
+          echo "EOF" >> "$GITHUB_ENV"
+
+      - name: Post PR comment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## Usecase Verification Report \n\n${process.env.REPORT || 'No usecase files changed.'}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
+
+      - name: Fail on red flags
+        if: env.EXIT_OK != 'true'
+        run: |
+          echo "One or more usecases had red flags. See verification report above."
+          exit 1

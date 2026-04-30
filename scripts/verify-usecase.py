@@ -260,6 +260,11 @@ def main():
         default=None,
         help="Search old.reddit.com for mentions of a topic",
     )
+    parser.add_argument(
+        "--ci",
+        action="store_true",
+        help="Exit non-zero if any red flag is found",
+    )
     args = parser.parse_args()
 
     repos = parse_github_repos_from_markdown(args.usecase)
@@ -317,6 +322,14 @@ def main():
     report_path = Path(args.usecase).with_suffix(".verification.md")
     report_path.write_text(report, encoding="utf-8")
     print(f"\nReport written to: {report_path}")
+
+    if args.ci:
+        any_red = any(r.get("flag") == "red" for r in source_results)
+        any_dead_repo = any(stars is not None and not ok for _, _, stars, ok in results)
+        if any_red or any_dead_repo:
+            print("\n❌ CI mode: red flag(s) detected — failing.", file=sys.stderr)
+            sys.exit(1)
+        print("\n✅ CI mode: all checks passed.")
 
 
 if __name__ == "__main__":
