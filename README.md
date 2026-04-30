@@ -5,7 +5,7 @@
 # Awesome Hermes Agent Use Cases
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-![Use Cases](https://img.shields.io/badge/usecases-22-blue?style=flat-square)
+![Use Cases](https://img.shields.io/badge/usecases-27-blue?style=flat-square)
 ![Last Update](https://img.shields.io/github/last-commit/YOUR_USERNAME/hermes-agent-usecases?label=Last%20Update&style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 
@@ -63,12 +63,14 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | [GitHub PR Review (cron)](usecases/github-pr-review-cron.md) | Periodic PR review without opening a webhook endpoint. Authenticated `gh`, a review skill, and a cron job. |
 | [GitHub PR Review (webhook)](usecases/github-pr-review-webhook.md) | Real-time PR comments via a signed GitHub webhook. End-to-end event-driven code review. |
 | [Production Software-Dev Workflow](usecases/production-software-dev-workflow.md) | A field report of daily production development on Hermes — long sessions, delegation, memory, one 12-hour run with ~2.6M replay tokens. |
+| [Local Model Quantization with TurboQuant](usecases/dev-local-model-quantization.md) | Optimize MLX models (Qwen3.5-9B) for local Apple Silicon inference using domain-specific skills — apply, benchmark, document, publish. |
 
 ## Frontends & UIs
 
 | Name | Description |
 | --- | --- |
 | [Open WebUI Frontend](usecases/open-webui-frontend.md) | Point Open WebUI at the Hermes API server to get a full browser chat frontend for the agent, with session continuity. |
+| [TUI Operator Console](usecases/tui-operator-console.md) | Keyboard-first terminal HUD for managing your agent — live sessions, skills toggle, cron, logs, config editing, multiple themes. |
 
 ## Home & Device Control
 
@@ -83,6 +85,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | --- | --- |
 | [Autonovel — House of Bells](usecases/autonovel-house-of-bells.md) | End-to-end autonomous novel, art, and audiobook production. Nous Research's own pipeline shipped a 19-chapter, 79,456-word book with an audiobook and a website. |
 | [Printing-Factory Task Memory](usecases/printing-factory-task-memory.md) | A custom skill that fixes long-context slowness and forgetting during daily factory operations. Local JSON index with sub-second retrieval. |
+| [Screen Recording → Tutorial Video](usecases/creative-screen-recording-video.md) | Feed Hermes a raw screen recording and get a finished tutorial video on HeyGen with your AI avatar — script generation, video production, and memory of preferences for repeat work. |
 
 ## Orchestration & Multi-Agent
 
@@ -97,6 +100,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | Name | Description |
 | --- | --- |
 | [YantrikDB Cognitive Memory (via MCP)](usecases/yantrikdb-memory-mcp.md) | Replace or augment native memory with a dedicated cognitive DB — vector + knowledge graph + temporal decay + contradiction detection. Integrates over MCP, so no Hermes plugin needed. |
+| [Obsidian Vault as a Second Brain](usecases/obsidian-second-brain.md) | Wire Hermes into an Obsidian vault for persistent knowledge — read notes, create daily dashboards, cross-reference tags, maintain a self-improving personal knowledge base. |
 
 ## Deployment Patterns
 
@@ -104,6 +108,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | --- | --- |
 | [Hermes on Fly.io](usecases/hermes-on-flyio.md) | Official Fly-apps deployment guide — run Hermes as a Fly Machine with a volume-backed `/opt/data`, daily snapshots, and ~$15/month baseline. |
 | [Local & Proxy Model Backends](usecases/local-and-proxy-models.md) | Run Hermes against Ollama, vLLM, oMLX, or a custom OpenAI-compatible proxy — for cost control, data locality, or model choice beyond the defaults. |
+| [Local Model Auto-Detection](usecases/local-model-auto-detection.md) | Hermes probes your local inference server, identifies the running model, detects context window, and auto-configures — eliminates first-setup friction for Ollama, llama.cpp, MLX, and vLLM. |
 
 ## Research & Training
 
