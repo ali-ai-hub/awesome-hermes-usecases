@@ -1,0 +1,10 @@
+# Tell GitHub Linguist to treat markdown files as documentation
+# (fixes "Language: None" on repo page)
+*.md linguist-documentation
+
+# Treat shell scripts as shell
+*.sh linguist-language=Shell
+
+# Treat yaml files as config
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
