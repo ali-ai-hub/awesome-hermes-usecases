@@ -14,6 +14,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
@@ -68,6 +69,67 @@ def check_source_alive(url: str) -> dict:
             return {"url": url, "status": f"server-error-{code}", "code": code, "flag": "red"}
     except Exception as e:
         return {"url": url, "status": f"error-{type(e).__name__}", "code": None, "flag": "red"}
+
+
+def check_reddit_mentions(query: str, cache_dir: str = "scripts/.cache") -> dict:
+    """
+    Search old.reddit.com for mentions of a topic. Cached per query to avoid
+    repeated scraping. Returns result count and top post engagement.
+
+    This is a best-effort signal, not primary-source verification.
+    Reddit blocks programmatic access; old.reddit.com with a Firefox
+    UA gives the highest success rate from an unauthenticated script.
+    """
+    cache_path = Path(cache_dir) / "reddit_cache.json"
+    try:
+        cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
+    except Exception:
+        cache = {}
+
+    cache_key = re.sub(r"\W+", "_", query.lower().strip())[:64]
+    if cache_key in cache:
+        return {"topic": query, **cache[cache_key], "cached": True}
+
+    search_url = f"https://old.reddit.com/search/?q={quote_plus(query)}&sort=new"
+    try:
+        req = Request(search_url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) "
+                          "Gecko/20100101 Firefox/120.0",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+        })
+        with urlopen(req, timeout=15) as resp:
+            html = resp.read().decode("utf-8", "replace")
+    except HTTPError as e:
+        if e.code == 403:
+            return {"topic": query, "status": "blocked", "flag": "yellow", "cached": False, "note": "Reddit anti-bot"}
+        return {"topic": query, "status": f"http-{e.code}", "flag": "red", "cached": False}
+    except Exception as e:
+        return {"topic": query, "status": f"error-{type(e).__name__}", "flag": "red", "cached": False}
+
+    # Very basic parsing: count result blocks, grab top title/score
+    # old.reddit search page structure: each result is a <div class="search-result ...">
+    result_blocks = html.split('class="search-result ')
+    count = max(0, len(result_blocks) - 1)
+
+    top_post = None
+    # Try to extract first result title + score
+    m = re.search(r'class="search-title"[^>]*>\s*<a[^>]*>([^<]+)</a>', html)
+    if m:
+        top_post = m.group(1).strip()
+
+    result = {
+        "topic": query,
+        "status": "checked",
+        "count": count,
+        "top_post": top_post,
+        "flag": "green" if count > 0 else "yellow",
+        "cached": False,
+    }
+    cache[cache_key] = {k: v for k, v in result.items() if k != "cached"}
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps(cache, indent=2), encoding="utf-8")
+    return result
 
 
 def check_github_stars(owner: str, repo: str, threshold: int = DEFAULT_THRESHOLD):
@@ -193,6 +255,11 @@ def main():
         default="all",
         help="Verification scope (default: all)",
     )
+    parser.add_argument(
+        "--reddit-query",
+        default=None,
+        help="Search old.reddit.com for mentions of a topic",
+    )
     args = parser.parse_args()
 
     repos = parse_github_repos_from_markdown(args.usecase)
@@ -223,6 +290,26 @@ def main():
                 results.append((owner, repo, None, False))
 
     report = generate_report(args.usecase, results, source_results)
+
+    if args.reddit_query:
+        print(f"\nSearching Reddit for: {args.reddit_query}")
+        reddit_result = check_reddit_mentions(args.reddit_query)
+        flag_emoji = {"green": "✅", "yellow": "⚠️", "red": "❌"}.get(reddit_result.get("flag"), "❓")
+        print(f"  {flag_emoji} {reddit_result['topic']}: {reddit_result.get('status', 'unknown')} "
+              f"(count={reddit_result.get('count', 'n/a')}, top='{reddit_result.get('top_post', 'n/a')}')")
+        if reddit_result.get("cached"):
+            print("  (from cache)")
+        # Append to report
+        report += "\n## Reddit Mentions\n\n"
+        report += f"- **Query**: {reddit_result['topic']}\n"
+        report += f"- **Status**: {reddit_result.get('status', 'unknown')} ({flag_emoji})\n"
+        report += f"- **Result count**: {reddit_result.get('count', 'N/A')}\n"
+        if reddit_result.get("top_post"):
+            report += f"- **Top post**: {reddit_result['top_post']}\n"
+        if reddit_result.get("note"):
+            report += f"- **Note**: {reddit_result['note']}\n"
+        report += "\n"
+
     print("\n--- Generated Markdown Report ---\n")
     print(report)
 
