@@ -132,6 +132,73 @@ def check_reddit_mentions(query: str, cache_dir: str = "scripts/.cache") -> dict
     return result
 
 
+def calculate_confidence_score(repos_results: list, source_results: list, reddit_result: dict = None) -> tuple:
+    """
+    Calculate confidence score based on three weighted signals.
+
+    - Source alive (50%): if source URLs exist, most must be green
+    - Engagement detected (30%): GitHub repos above star threshold
+    - Multiple corroborations (20%): 2+ repos, or repo + source, or repo + reddit
+
+    A usecase with zero source URLs can still score up to 80 (yellow).
+    Perfect score requires stars + source + reddit.
+    """
+    score = 0
+
+    # Source alive (50%)
+    if source_results:
+        total = len(source_results)
+        green = sum(1 for r in source_results if r.get("flag") == "green")
+        if total > 0 and green / total >= 0.5:
+            score += 50
+        elif green > 0:
+            score += 25
+
+    # Engagement detected (30%)
+    if repos_results:
+        any_engaged = any(
+            stars is not None and stars >= DEFAULT_THRESHOLD
+            for _, _, stars, _ in repos_results
+        )
+        if any_engaged:
+            score += 30
+
+    # Multiple corroborations (20%)
+    types_present = 0
+    repo_count = len([r for r in repos_results if r[2] is not None and r[3]])
+    if repo_count >= 2:
+        types_present = 2  # Multiple repos = strong corroboration
+    elif repos_results:
+        types_present = 1
+
+    if source_results and any(r.get("flag") in ("green", "yellow") for r in source_results):
+        types_present += 1
+    if reddit_result and reddit_result.get("flag") == "green":
+        types_present += 1
+
+    if types_present >= 2:
+        score += 20
+    elif types_present >= 1:
+        score += 10
+
+    if score > 80:
+        flag = "green"
+    elif score >= 50:
+        flag = "yellow"
+    else:
+        flag = "red"
+
+    return score, flag
+
+
+def generate_badge(usecase_name: str, score: int, flag: str) -> str:
+    """Generate a shields.io badge markdown string."""
+    color_map = {"green": "brightgreen", "yellow": "yellow", "red": "red"}
+    color = color_map.get(flag, "lightgrey")
+    label = usecase_name.replace("-", "--")
+    return f"![{label}](https://img.shields.io/badge/{label}-{score}%2F100-{color})"
+
+
 def check_github_stars(owner: str, repo: str, threshold: int = DEFAULT_THRESHOLD):
     """
     Fetch star count for a GitHub repository and compare against a threshold.
@@ -304,8 +371,17 @@ def main():
               f"(count={reddit_result.get('count', 'n/a')}, top='{reddit_result.get('top_post', 'n/a')}')")
         if reddit_result.get("cached"):
             print("  (from cache)")
-        # Append to report
-        report += "\n## Reddit Mentions\n\n"
+    else:
+        reddit_result = None
+
+    score, flag = calculate_confidence_score(results, source_results, reddit_result)
+    badge = generate_badge(Path(args.usecase).stem, score, flag)
+    print(f"\nConfidence Score: {score}/100 ({flag.upper()}) {badge}")
+
+    report += f"\n## Confidence Score\n\n- **Score**: {score}/100\n- **Flag**: {flag}\n- **Badge**: {badge}\n\n"
+
+    if args.reddit_query:
+        report += "## Reddit Mentions\n\n"
         report += f"- **Query**: {reddit_result['topic']}\n"
         report += f"- **Status**: {reddit_result.get('status', 'unknown')} ({flag_emoji})\n"
         report += f"- **Result count**: {reddit_result.get('count', 'N/A')}\n"
