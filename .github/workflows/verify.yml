@@ -25,9 +25,16 @@ jobs:
         run: |
           exit_ok=true
           report=""
+          labels="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
+          title="${{ github.event.pull_request.title }}"
+          nascent_args=()
+          if [[ " ${labels,,} " == *" nascent "* || "${title,,}" == *"nascent"* ]]; then
+            nascent_args+=(--allow-nascent)
+          fi
           for f in $(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^usecases/.*\.md$'); do
             echo "::group::Verifying $f"
-            result=$(python scripts/verify-usecase.py --usecase "$f" --ci 2>&1) || ec=$?
+            ec=0
+            result=$(python scripts/verify-usecase.py --usecase "$f" --ci "${nascent_args[@]}" 2>&1) || ec=$?
             if [ "${ec:-0}" -ne 0 ]; then
               exit_ok=false
               report+="❌ **$f** — red flag detected\n"

@@ -26,7 +26,7 @@ A primary source is **live evidence that the usecase actually happened** — not
 
 When you open a PR that touches `usecases/*.md`, the CI pipeline runs:
 
-1. **GitHub star check** — every `github.com/owner/repo` URL is resolved via the GitHub API. Minimum threshold: 10 stars. (Exception: brand-new Hermes plugins, labeled `nascent` in PR title, get a 0-star pass.)
+1. **GitHub star check** - every `github.com/owner/repo` URL is resolved via the GitHub API. Minimum threshold: 10 stars. Exception: brand-new repos can use the `nascent` PR label or include `nascent` in the PR title to pass during their first 48 hours.
 2. **Source-alive check** — every non-GitHub URL gets a HEAD request. 403/429 → yellow (not red), because anti-bot protection ≠ dead link.
 3. **Reddit mention detection** (optional) — if the usecase claims Reddit origin, a `--reddit-query` search attempts to corroborate. 403 from Reddit is documented, not a failure.
 4. **Confidence score** — weighted composite of the above. Thresholds:
@@ -67,7 +67,7 @@ This generates `usecases/my-topic.verification.md` — include it in your PR if 
 
 ### Labels
 
-- `nascent` → bypasses star threshold (for repos < 48 hours old)
+- `nascent` - bypasses the star threshold for repos created in the last 48 hours
 - `community-only` → no GitHub repo exists yet; relies on docs + Reddit corroboration
 
 ---
