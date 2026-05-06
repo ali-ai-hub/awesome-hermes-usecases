@@ -13,7 +13,9 @@ import argparse
 import json
 import re
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Optional
 from urllib.parse import quote_plus
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
@@ -22,7 +24,7 @@ from urllib.error import HTTPError
 GITHUB_API = "https://api.github.com/repos/{owner}/{repo}"
 
 # Regex to capture github.com URLs: https://github.com/<owner>/<repo>[optional trailing /...]
-GITHUB_URL_RE = re.compile(r'https://github\.com/([^/\s)]+)/([^/\s)]+)')
+GITHUB_URL_RE = re.compile(r'https://github\.com/([^/\s\)\]\>]+)/([^/\s\)\]\>]+)')
 
 # Not used — parse_source_urls_from_markdown is regex-free
 
@@ -157,8 +159,8 @@ def calculate_confidence_score(repos_results: list, source_results: list, reddit
     # Engagement detected (30%)
     if repos_results:
         any_engaged = any(
-            stars is not None and stars >= DEFAULT_THRESHOLD
-            for _, _, stars, _ in repos_results
+            stars is not None and ok
+            for _, _, stars, ok, _ in repos_results
         )
         if any_engaged:
             score += 30
@@ -199,7 +201,23 @@ def generate_badge(usecase_name: str, score: int, flag: str) -> str:
     return f"![{label}](https://img.shields.io/badge/{label}-{score}%2F100-{color})"
 
 
-def check_github_stars(owner: str, repo: str, threshold: int = DEFAULT_THRESHOLD):
+def is_recent_repo(created_at: Optional[str], max_age_hours: int = 48) -> bool:
+    """Return true when a repository was created within the nascent window."""
+    if not created_at:
+        return False
+    try:
+        created = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return datetime.now(timezone.utc) - created <= timedelta(hours=max_age_hours)
+
+
+def check_github_stars(
+    owner: str,
+    repo: str,
+    threshold: int = DEFAULT_THRESHOLD,
+    allow_nascent: bool = False,
+):
     """
     Fetch star count for a GitHub repository and compare against a threshold.
 
@@ -209,12 +227,16 @@ def check_github_stars(owner: str, repo: str, threshold: int = DEFAULT_THRESHOLD
         threshold: Minimum star count to pass (default 10).
 
     Returns:
-        Tuple of (star_count: int, is_above_threshold: bool).
+        Tuple of (star_count: int, is_above_threshold: bool, reason: str).
     """
     url = GITHUB_API.format(owner=owner, repo=repo)
     data = fetch_json(url)
     star_count = data.get("stargazers_count", 0)
-    return star_count, star_count >= threshold
+    if star_count >= threshold:
+        return star_count, True, "threshold"
+    if allow_nascent and is_recent_repo(data.get("created_at")):
+        return star_count, True, "nascent"
+    return star_count, False, "below-threshold"
 
 
 def parse_github_repos_from_markdown(path: str):
@@ -232,6 +254,9 @@ def parse_github_repos_from_markdown(path: str):
     seen = set()
     repos = []
     for owner, repo in matches:
+        repo = repo.rstrip('.,;:!?')
+        if repo.endswith(".git"):
+            repo = repo[:-4]
         key = (owner, repo)
         if key not in seen:
             seen.add(key)
@@ -294,13 +319,16 @@ def generate_report(usecase_path: str, results: list, source_results: list = Non
     lines.append("")
     lines.append("# Verification Report")
     lines.append("")
-    for owner, repo, stars, ok in results:
-        status = "✅ above threshold" if ok else "❌ below threshold"
+    for owner, repo, stars, ok, reason in results:
+        if reason == "nascent":
+            status = "✅ nascent exception"
+        else:
+            status = "✅ above threshold" if ok else "❌ below threshold"
         lines.append(f"- **{owner}/{repo}**: {stars} stars ({status})")
     lines.append("")
     lines.append("## Summary")
     lines.append(f"- Total repos checked: {len(results)}")
-    passed = sum(1 for _, _, _, ok in results if ok)
+    passed = sum(1 for _, _, _, ok, _ in results if ok)
     lines.append(f"- Passed threshold (≥{DEFAULT_THRESHOLD} stars): {passed}")
     lines.append(f"- Failed threshold (<{DEFAULT_THRESHOLD} stars): {len(results) - passed}")
     lines.append("")
@@ -332,6 +360,11 @@ def main():
         action="store_true",
         help="Exit non-zero if any red flag is found",
     )
+    parser.add_argument(
+        "--allow-nascent",
+        action="store_true",
+        help="Allow GitHub repos created in the last 48 hours to pass below the star threshold",
+    )
     args = parser.parse_args()
 
     repos = parse_github_repos_from_markdown(args.usecase)
@@ -354,12 +387,20 @@ def main():
                 sys.exit(1)
         for owner, repo in repos:
             try:
-                stars, ok = check_github_stars(owner, repo)
-                results.append((owner, repo, stars, ok))
-                print(f"{owner}/{repo}: {stars} stars (threshold {'met' if ok else 'not met'})")
+                stars, ok, reason = check_github_stars(
+                    owner,
+                    repo,
+                    allow_nascent=args.allow_nascent,
+                )
+                results.append((owner, repo, stars, ok, reason))
+                if reason == "nascent":
+                    status = "nascent exception"
+                else:
+                    status = f"threshold {'met' if ok else 'not met'}"
+                print(f"{owner}/{repo}: {stars} stars ({status})")
             except HTTPError as e:
                 print(f"Error fetching {owner}/{repo}: {e.code} {e.reason}", file=sys.stderr)
-                results.append((owner, repo, None, False))
+                results.append((owner, repo, None, False, "fetch-error"))
 
     report = generate_report(args.usecase, results, source_results)
 
@@ -401,7 +442,7 @@ def main():
 
     if args.ci:
         any_red = any(r.get("flag") == "red" for r in source_results)
-        any_dead_repo = any(stars is not None and not ok for _, _, stars, ok in results)
+        any_dead_repo = any(stars is not None and not ok for _, _, stars, ok, _ in results)
         if any_red or any_dead_repo:
             print("\n❌ CI mode: red flag(s) detected — failing.", file=sys.stderr)
             sys.exit(1)
