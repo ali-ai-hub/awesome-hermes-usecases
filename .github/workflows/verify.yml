@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -22,35 +24,45 @@ jobs:
 
       - name: Verify each changed usecase
         id: verify
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           exit_ok=true
           report=""
-          labels="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
-          title="${{ github.event.pull_request.title }}"
+          labels="$PR_LABELS"
+          title="$PR_TITLE"
           nascent_args=()
           if [[ " ${labels,,} " == *" nascent "* || "${title,,}" == *"nascent"* ]]; then
             nascent_args+=(--allow-nascent)
           fi
-          for f in $(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^usecases/.*\.md$'); do
+          base_sha="$BASE_SHA"
+          mapfile -t changed_usecases < <(
+            git diff --name-only "$base_sha"...HEAD | grep '^usecases/.*\.md$' || true
+          )
+          for f in "${changed_usecases[@]}"; do
             echo "::group::Verifying $f"
             ec=0
             result=$(python scripts/verify-usecase.py --usecase "$f" --ci "${nascent_args[@]}" 2>&1) || ec=$?
             if [ "${ec:-0}" -ne 0 ]; then
               exit_ok=false
-              report+="❌ **$f** — red flag detected\n"
+              report+=$'❌ **'"$f"$'** - red flag detected\n'
             else
-              report+="✅ **$f** — passed\n"
+              report+=$'✅ **'"$f"$'** - passed\n'
             fi
             echo "$result"
             echo "::endgroup::"
           done
-          echo "EXIT_OK=$exit_ok" >> "$GITHUB_ENV"
-          echo "REPORT<<EOF" >> "$GITHUB_ENV"
-          echo "$report" >> "$GITHUB_ENV"
-          echo "EOF" >> "$GITHUB_ENV"
+          {
+            echo "EXIT_OK=$exit_ok"
+            echo "REPORT<<EOF"
+            echo "$report"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
 
       - name: Post PR comment
-        if: always()
+        if: always() && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v7
         with:
           script: |
