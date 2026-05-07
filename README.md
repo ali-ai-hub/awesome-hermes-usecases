@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/aliaihub-awesome-hermes-usecases-badge.png)](https://mseep.ai/app/aliaihub-awesome-hermes-usecases)
+
 <p align="center">
   <img src="assets/hermes-agent-usecases.png" alt="Hermes Agent — Real-World Use Cases" width="800">
 </p>
