@@ -5,7 +5,7 @@
 # Awesome Hermes Agent Use Cases
 
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-![Use Cases](https://img.shields.io/badge/usecases-30-blue?style=flat-square)
+![Use Cases](https://img.shields.io/badge/usecases-32-blue?style=flat-square)
 ![Last Update](https://img.shields.io/github/last-commit/ali-erfan-dev/awesome-hermes-usecases?label=Last%20Update&style=flat-square)
 ![Stars](https://img.shields.io/github/stars/ali-erfan-dev/awesome-hermes-usecases?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
@@ -53,6 +53,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | [Daily Briefing Bot](usecases/daily-briefing-bot.md) | A scheduled agent that researches topics every morning and delivers a summary to Telegram or Discord. The canonical "hello world" of Hermes automation. |
 | [Zero-Token Notifications](usecases/zero-token-notifications.md) | Cron jobs that only wake the LLM when something actually changed — pre-filter with a Python script, only pay for tokens on meaningful signal. |
 | [Intent-to-Artifacts Workflow](usecases/intent-to-artifacts.md) | A personal workflow for turning rough prompts into runbooks, RSS curation, diagrams, and notes — delivered to Telegram + markdown files. |
+| [X Social Automation Toolset](usecases/x-social-automation-toolset.md) | A native Hermes plugin for X/Twitter search, account reads, trend checks, and operator-approved actions through Xquik. |
 
 ## Messaging & Team Bots
 
