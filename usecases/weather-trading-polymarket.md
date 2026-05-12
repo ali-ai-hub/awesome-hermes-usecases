@@ -42,6 +42,7 @@ The agent stack:
 
 ## Sources
 
+- **Step-by-step guide:** Moonsat (Medium) — "Hermes Agent + Polymarket — how I built self-learning weather trading bot $100 → $5,000" — full install walkthrough, prompt template, and operational notes
 - **Primary prompt:** RohOnChain — "The only prompt you need to build a self-learning Polymarket weather trading agent" — step-by-step deployable guide (X/Twitter)
 - **Results thread:** @antpalkin — $440K profit in 20 days, 372 likes, 63 RTs (X/Twitter)
 - **Trading stack overview:** @RoundtableSpace — $500K quant stack narrative, viral thread (X/Twitter)
