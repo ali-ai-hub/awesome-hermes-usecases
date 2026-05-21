@@ -55,6 +55,7 @@ Then pick a use case below. The [`/demos`](demos/) folder has three runnable sta
 | [Zero-Token Notifications](usecases/zero-token-notifications.md) | Cron jobs that only wake the LLM when something actually changed — pre-filter with a Python script, only pay for tokens on meaningful signal. |
 | [Intent-to-Artifacts Workflow](usecases/intent-to-artifacts.md) | A personal workflow for turning rough prompts into runbooks, RSS curation, diagrams, and notes — delivered to Telegram + markdown files. |
 | [X Social Automation Toolset](usecases/x-social-automation-toolset.md) | A native Hermes plugin for X/Twitter search, account reads, trend checks, and operator-approved actions through Xquik. |
+| [Sequenzy Email Marketing Agent](usecases/sequenzy-email-marketing-agent.md) | Use Hermes with Sequenzy skills/CLI to draft lifecycle campaigns, manage subscriber workflows, send tests, and monitor email stats. |
 
 ## Messaging & Team Bots
 
